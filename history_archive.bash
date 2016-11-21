@@ -9,40 +9,63 @@ NUM_OF_DAYS_PER_FILE__HA=7
 
 # Name of directory to put files.
 # Files will be put into $(HOME)/ARCHIVE_NAME__HA
-ARCHIVE_NAME__HA=history_archive
+ARCHIVE_NAME__HA=Dropbox/history_archive/home/
 
 
 # Function that will run prior to each command
+# Set some variables for later usage, see PostCommand.
 function PreCommand() {
-  current_command=$BASH_COMMAND
-  # echo "in PreCommand $current_command"
-  if [ -z "$READY_TO_ARCHIVE__HA" ]; then
-    return
+  CURRENT_COMMAND=$BASH_COMMAND
+  if [ -z ${START_DIR} ]; then
+    START_DIR=$(pwd)
+    START_TIME_STAMP=$(date +%Y%m%d%H%M%S)
+    # echo "PreCommand set new starting dir $START_DIR"
   fi
-  unset READY_TO_ARCHIVE__HA
-
-  # echo "in PreCommand $current_command (saving)"
-  #
-  # Execute the following before prompt is drawn.
-  #
-
-  # Set the archive_file.
-  # It must be called every time. It changes over time.
-  SetCurrentFile
-
-  # Save data to the file
-  line="$time_stamp $(pwd) $current_command"
-  echo "$line" >> $ARCHIVE_FILE
 }
 trap "PreCommand" DEBUG
 
 # Function that will run after each command.
-# It just sets variables so that grouped commands like
-#   $ cmd1 && cmd2 && cmd3
-# will only be processed once.
 function PostCommand() {
   # echo "in PostCommand"
-  READY_TO_ARCHIVE__HA=1
+
+  # Get last executed line from 'history'
+  history_line=$(history | tail -1)
+  tokens=( $history_line )
+  tokenIndex=0
+  cmd=""
+  for word in $history_line; do
+      if [ "$tokenIndex" -lt 2 ]; then
+          tokenIndex=$(( tokenIndex + 1 ))
+          continue
+      fi
+      cmd="$cmd $word"
+  done
+
+  # Line to archive is different from the data in history because 
+  # it has the timestamp the command was entered
+  # and the directory where the command was entered
+  line_to_archive="$START_TIME_STAMP $START_DIR $cmd"
+
+  # Check if we need to save this line.
+  # This check will help us to skip empty commands.
+  if [ -z ${prev_history_line+x} ]; then
+      save_file=0
+  elif [ "$prev_history_line" != "$history_line" ]; then
+      save_file=1
+  else
+      save_file=0
+  fi
+  
+  # Save file to the archive
+  if [ "$save_file" -eq 1 ]; then
+      SetCurrentFile
+      echo "$line_to_archive" >> $ARCHIVE_FILE
+  fi
+
+  # Update variables for the next round
+  prev_history_line="$history_line"
+  unset START_DIR
+  unset CURRENT_COMMAND
 }
 
 
@@ -72,8 +95,9 @@ mkdir -p $archive_dir
 
 
 # Some convenience functions
-alias ha='tail -100 $ARCHIVE_FILE'
-
+alias ha='SetCurrentFile ; tail -100 $ARCHIVE_FILE'
 
 # Activate the history_archive.
 PROMPT_COMMAND="${PROMPT_COMMAND:-:} ; PostCommand;"
+
+HISTTIMEFORMAT="%Y%m%d%H%M%S "

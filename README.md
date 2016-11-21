@@ -7,12 +7,17 @@ Archive your unix history better
 
 2. Add the following to your `~/.bashrc`
 
-    source ~/Projects/HistoryArchive/history_archive.bash  
-    (Change the path to history_archive.bash to match your file path).
+   `source ~/Projects/HistoryArchive/history_archive.bash `
 
-# How this works
-history_archive.bash sets up a `trap` to capture the current command "$(BASH_COMMAND)". This command, along with the current timestamp and directory, are written to a txt file in ~/history_archive/.
+   (Change the path to history_archive.bash to match your file path).
 
+3. Restart your terminal or run `source ~/.bashrc`
 
-# TODO
-- fix multiple statement in one line bug
+# What can you do
+
+1. Get recent history (not much different than regular `history`:
+
+   `ha`
+
+2. ... (still working on it)
+
