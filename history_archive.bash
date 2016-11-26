@@ -9,7 +9,7 @@ NUM_OF_DAYS_PER_FILE__HA=7
 
 # Name of directory to put files.
 # Files will be put into $(HOME)/ARCHIVE_NAME__HA
-ARCHIVE_NAME__HA=Dropbox/history_archive/home/
+ARCHIVE_NAME__HA=~/Dropbox/history_archive/home/
 
 
 # Function that will run prior to each command
@@ -94,8 +94,12 @@ archive_dir="$home_dir/$ARCHIVE_NAME__HA"
 mkdir -p $archive_dir
 
 
-# Some convenience functions
-alias ha='SetCurrentFile ; tail -100 $ARCHIVE_FILE'
+# Define function to access history archive data
+function ha() {
+    CODE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    python $CODE_DIR/ha_commands.py $ARCHIVE_NAME__HA $@
+}
+
 
 # Activate the history_archive.
 PROMPT_COMMAND="${PROMPT_COMMAND:-:} ; PostCommand;"
