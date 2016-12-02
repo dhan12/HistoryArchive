@@ -97,7 +97,7 @@ mkdir -p $archive_dir
 # Define function to access history archive data
 function ha() {
     CODE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    python $CODE_DIR/ha_commands.py $ARCHIVE_NAME__HA $@
+    python2.7 $CODE_DIR/ha_commands.py -d $ARCHIVE_NAME__HA $@
 }
 
 

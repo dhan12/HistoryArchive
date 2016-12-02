@@ -2,26 +2,35 @@ import os
 import sys
 import glob
 import subprocess
+import argparse
 
-HISTORY_ARCHIVE_DIR = ''
+def getLatest(fileDir):
+    return max(glob.iglob(fileDir+'/*.txt'), key=os.path.getctime)
 
-def getLatest():
-    return max(glob.iglob(HISTORY_ARCHIVE_DIR+'/*.txt'), key=os.path.getctime)
+def parseArgs():
+    parser = argparse.ArgumentParser(description='History Archive commands', prog="ha")
+    parser.add_argument('-d', '--dir', required=True,
+            help='Directory for history archive files.',
+            dest='historyArchiveDir')
+    parser.add_argument('-c', '--comments', action='store_true',
+            help='Show recent comments',
+            dest='getComments')
 
-def main(args):
-    if len(args) == 0:
-        latestFile = getLatest()
-        subprocess.call(['tail','-10',latestFile])
-    # TODO replace this else block with other argument parsing/processing
+    return parser.parse_args()
+
+def main():
+    args = parseArgs()
+
+    if args.getComments:
+        latestFile = getLatest(args.historyArchiveDir)
+        proc = subprocess.Popen(['tail','-1000',latestFile], stdout=subprocess.PIPE)
+        out, err = proc.communicate()
+        for line in out:
+            if '#' in line:
+                print line
     else:
-        latestFile = getLatest()
+        latestFile = getLatest(args.historyArchiveDir)
         subprocess.call(['tail','-10',latestFile])
 
 if __name__ == '__main__':
-
-    if len(sys.argv) <= 1:
-        print 'Error: Not enough arguments for ', sys.argv[0]
-
-    HISTORY_ARCHIVE_DIR = sys.argv[1]
-
-    main(sys.argv[2:])
+    main()
