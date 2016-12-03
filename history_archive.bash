@@ -2,6 +2,10 @@
 
 # Parameters
 
+# Print out debugging echo statements
+typeset -i _VERBOSE
+_VERBOSE=0
+
 # Each file will contain commands that are grouped together by date/time.
 # Change this variable to put more or less commands in a given file.
 NUM_OF_DAYS_PER_FILE__HA=7
@@ -9,8 +13,20 @@ NUM_OF_DAYS_PER_FILE__HA=7
 
 # Name of directory to put files.
 # Files will be put into $(HOME)/ARCHIVE_NAME__HA
-ARCHIVE_NAME__HA=~/Dropbox/history_archive/home/
+ARCHIVE_NAME__HA=Dropbox/history_archive/home/
 
+# Constants for this script
+typeset -i _TRUE
+_TRUE=1
+
+
+# Function to print things for debugging
+function log() {
+  if [ "$_VERBOSE" -eq "$_TRUE" ]; then
+    echo $*
+  fi
+}
+log $(pwd) history_archive.bash heartbeat ...
 
 # Function that will run prior to each command
 # Set some variables for later usage, see PostCommand.
@@ -19,14 +35,14 @@ function PreCommand() {
   if [ -z ${START_DIR} ]; then
     START_DIR=$(pwd)
     START_TIME_STAMP=$(date +%Y%m%d%H%M%S)
-    # echo "PreCommand set new starting dir $START_DIR"
+    log "PreCommand set new starting dir $START_DIR"
   fi
 }
 trap "PreCommand" DEBUG
 
 # Function that will run after each command.
 function PostCommand() {
-  # echo "in PostCommand"
+  log "in PostCommand"
 
   # Get last executed line from 'history'
   history_line=$(history | tail -1)
@@ -46,6 +62,8 @@ function PostCommand() {
   # and the directory where the command was entered
   line_to_archive="$START_TIME_STAMP $START_DIR $cmd"
 
+  log "will archive $line_to_archive"
+
   # Check if we need to save this line.
   # This check will help us to skip empty commands.
   if [ -z ${prev_history_line+x} ]; then
@@ -59,6 +77,7 @@ function PostCommand() {
   # Save file to the archive
   if [ "$save_file" -eq 1 ]; then
       SetCurrentFile
+      log "echo $line_to_archive >> $ARCHIVE_FILE"
       echo "$line_to_archive" >> $ARCHIVE_FILE
   fi
 
