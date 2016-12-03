@@ -4,17 +4,19 @@ Archive your unix history better
 
 # How to get this working
 
-1. Save history_archive.bash to your machine.
+1. Save files to your machine.
 
    `git clone git@github.com:dhan12/HistoryArchive.git`
 
 2. Add the following two lines to your `~/.bashrc`
 
-   `HISTORY_ARCHIVE_DIR=/Users/username/Dropbox/archive/`
-
-   `source ~/Projects/HistoryArchive/history_archive.bash`
+   a. `HISTORY_ARCHIVE_DIR=/Users/username/Dropbox/archive/`
 
    (Change the HISTORY_ARCHIVE_DIR path to some folder where you want to store your history).
+
+   b. `source ~/Projects/HistoryArchive/history_archive.bash`
+
+   (Change the source command to the file you cloned the directory to).
 
 3. Restart your terminal or run `source ~/.bashrc`
 
