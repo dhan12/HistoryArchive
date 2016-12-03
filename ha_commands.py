@@ -23,7 +23,6 @@ def main():
 
     if args.getComments:
         latestFile = getLatest(args.historyArchiveDir)
-        print latestFile
         proc = subprocess.Popen(['tail','-1000',latestFile], stdout=subprocess.PIPE)
         out, err = proc.communicate()
         for line in out.split('\n'):
