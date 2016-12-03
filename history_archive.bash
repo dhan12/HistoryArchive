@@ -1,5 +1,20 @@
 #!/bin/bash
 
+
+# Prerequisite 1 -- Is HISTORY_ARCHIVE_DIR defined?
+if [ -z ${HISTORY_ARCHIVE_DIR+x} ]; then
+    echo "ERROR $(pwd)/history_archive.bash HISTORY_ARCHIVE_DIR is not defined. Exiting now"
+    return 2
+fi
+
+# Prerequisite 2 -- Can we create a directory for history archive files?
+mkdir -p $HISTORY_ARCHIVE_DIR
+rc=$?
+if [ $rc -ne 0 ]; then
+    echo "ERROR $(pwd)/history_archive.bash Failed to create history archive dir at $HISTORY_ARCHIVE_DIR . Exiting now."
+    return 3
+fi
+
 # Parameters
 
 # Print out debugging echo statements
@@ -101,26 +116,22 @@ function SetCurrentFile() {
     dayForHistoryFile="0$dayForHistoryFile"
   fi
 
-  ARCHIVE_FILE="$archive_dir/$(date +%Y%m)$dayForHistoryFile.txt"
+  ARCHIVE_FILE="$HISTORY_ARCHIVE_DIR/$(date +%Y%m)$dayForHistoryFile.txt"
   touch $ARCHIVE_FILE
 }
-
-
-# Get the directory to save data to
-current_user=$(whoami)
-home_dir=$(eval echo ~${current_user})
-archive_dir="$home_dir/$ARCHIVE_NAME__HA"
-mkdir -p $archive_dir
 
 
 # Define function to access history archive data
 function ha() {
     CODE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    python2.7 $CODE_DIR/ha_commands.py -d $ARCHIVE_NAME__HA $@
+    python2.7 $CODE_DIR/ha_commands.py -d $HISTORY_ARCHIVE_DIR $@
 }
+
+
 
 
 # Activate the history_archive.
 PROMPT_COMMAND="${PROMPT_COMMAND:-:} ; PostCommand;"
 
+# Change how `history` displays the last command
 HISTTIMEFORMAT="%Y%m%d%H%M%S "

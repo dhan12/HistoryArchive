@@ -5,11 +5,12 @@ Archive your unix history better
 
 1. Save history_archive.bash to your machine.
 
-2. Add the following to your `~/.bashrc`
+2. Add the following two lines to your `~/.bashrc`
 
-   `source ~/Projects/HistoryArchive/history_archive.bash `
+   HISTORY_ARCHIVE_DIR=/Users/username/Dropbox/archive/
+   source ~/Projects/HistoryArchive/history_archive.bash
 
-   (Change the path to history_archive.bash to match your file path).
+   (Change the HISTORY_ARCHIVE_DIR path to some folder where you want to store your history).
 
 3. Restart your terminal or run `source ~/.bashrc`
 
@@ -22,7 +23,7 @@ The main script (history_archive.bash) is written in bash and a helper function 
 
    `ha`
 
-2. (not functional yet) Use command line history as a note taking tool. 
+2. Use command line history as a note taking tool. 
 
    In the command line enter comments (non-functional commands like this).
    
