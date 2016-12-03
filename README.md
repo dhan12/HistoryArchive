@@ -1,21 +1,30 @@
 # HistoryArchive
+
 Archive your unix history better
 
 # How to get this working
 
 1. Save history_archive.bash to your machine.
 
+   `git clone git@github.com:dhan12/HistoryArchive.git`
+
 2. Add the following two lines to your `~/.bashrc`
 
-   HISTORY_ARCHIVE_DIR=/Users/username/Dropbox/archive/
-   source ~/Projects/HistoryArchive/history_archive.bash
+   `HISTORY_ARCHIVE_DIR=/Users/username/Dropbox/archive/`
+
+   `source ~/Projects/HistoryArchive/history_archive.bash`
 
    (Change the HISTORY_ARCHIVE_DIR path to some folder where you want to store your history).
 
 3. Restart your terminal or run `source ~/.bashrc`
 
+   Use unix as usual, and your history should be archived.
+
+   Use `ha` commands for additional functionality.
+
 # Prerequisites / Dependencies
-The main script (history_archive.bash) is written in bash and a helper function (`ha_commands.py`) is written in Python. 
+
+You will need bash and Python (version 2.7). The main script (`history_archive.bash`) is written in bash and a helper function (`ha_commands.py`) is written in Python (for Python 2.7).
 
 # What can you do
 
@@ -23,16 +32,22 @@ The main script (history_archive.bash) is written in bash and a helper function 
 
    `ha`
 
-2. Use command line history as a note taking tool. 
+2. See help documentation via
+
+   `ha --help`
+
+3. Personal hack # 1 - use this to keep a quick log of what I am working on.
 
    In the command line enter comments (non-functional commands like this).
-   
-   `# This is a note.`
+
+   `# Start work on project a`.
+
+   `# break`
+
+   `# Start work on project b`.
+
    `# This is another note.`
 
-   Then, we can expose notes by doing a command like
+   Then, view recent notes like this
 
-   `ha --notes`
-
-   which could print out recent notes.
-
+   `ha -c`
