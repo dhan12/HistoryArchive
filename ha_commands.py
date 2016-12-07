@@ -34,7 +34,7 @@ def main():
                 pass
     else:
         latestFile = getLatest(args.historyArchiveDir)
-        subprocess.call(['tail','-10',latestFile])
+        subprocess.call(['tail','-1000',latestFile])
 
 if __name__ == '__main__':
     main()
