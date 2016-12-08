@@ -18,8 +18,7 @@ fi
 # Parameters
 
 # Print out debugging echo statements
-typeset -i _VERBOSE
-_VERBOSE=0
+declare -i _VERBOSE=0
 
 # Each file will contain commands that are grouped together by date/time.
 # Change this variable to put more or less commands in a given file.
@@ -31,8 +30,7 @@ NUM_OF_DAYS_PER_FILE__HA=7
 ARCHIVE_NAME__HA=Dropbox/history_archive/home/
 
 # Constants for this script
-typeset -i _TRUE
-_TRUE=1
+declare -i _TRUE=1
 
 
 # Function to print things for debugging
@@ -77,8 +75,6 @@ function PostCommand() {
   # and the directory where the command was entered
   line_to_archive="$START_TIME_STAMP $START_DIR $cmd"
 
-  log "will archive $line_to_archive"
-
   # Check if we need to save this line.
   # This check will help us to skip empty commands.
   if [ -z ${prev_history_line+x} ]; then
@@ -88,6 +84,7 @@ function PostCommand() {
   else
       save_file=0
   fi
+  log "line_to_archive = $line_to_archive, save_file = $save_file"
   
   # Save file to the archive
   if [ "$save_file" -eq 1 ]; then
@@ -108,15 +105,17 @@ function SetCurrentFile() {
 
   time_stamp=$(date +%Y%m%d%H%M%S)
   day=$(date +%d)
+  printf -v day "%d" $(( 10#$raw_day )) # make sure number is base 10.
 
   # Get the day for the history file.
-  dayForHistoryFile=$(( ( ( (day-1) /NUM_OF_DAYS_PER_FILE__HA) * \
-    NUM_OF_DAYS_PER_FILE__HA) + 1 ))
-  if [ $dayForHistoryFile -lt 10 ]; then
-    dayForHistoryFile="0$dayForHistoryFile"
-  fi
+  dayForHistoryFile="$(( ( ( (day-1) /NUM_OF_DAYS_PER_FILE__HA) * \
+    NUM_OF_DAYS_PER_FILE__HA) + 1 ))"
+
+  # zero pad the day
+  printf -v dayForHistoryFile "%02d" $dayForHistoryFile
 
   ARCHIVE_FILE="$HISTORY_ARCHIVE_DIR/$(date +%Y%m)$dayForHistoryFile.txt"
+  log "ARCHIVE_FILE = $ARCHIVE_FILE"
   touch $ARCHIVE_FILE
 }
 
