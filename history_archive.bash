@@ -104,15 +104,18 @@ function PostCommand() {
 function SetCurrentFile() {
 
   time_stamp=$(date +%Y%m%d%H%M%S)
-  day=$(date +%d)
-  printf -v day "%d" $(( 10#$raw_day )) # make sure number is base 10.
+  dayOfMonth=$(date +"%d")
+  #printf -v dayOfMonth "%d" $(( 10#$raw_day )) # make sure number is base 10.
+  log "SetCurrentFile dayOfMonth=$dayOfMonth"
 
   # Get the day for the history file.
-  dayForHistoryFile="$(( ( ( (day-1) /NUM_OF_DAYS_PER_FILE__HA) * \
+  dayForHistoryFile="$(( ( ( (dayOfMonth-1) /NUM_OF_DAYS_PER_FILE__HA) * \
     NUM_OF_DAYS_PER_FILE__HA) + 1 ))"
+  log "SetCurrentFile dayForHistoryFile=$dayForHistoryFile"
 
   # zero pad the day
   printf -v dayForHistoryFile "%02d" $dayForHistoryFile
+  log "SetCurrentFile zero-padded dayForHistoryFile=$dayForHistoryFile"
 
   ARCHIVE_FILE="$HISTORY_ARCHIVE_DIR/$(date +%Y%m)$dayForHistoryFile.txt"
   log "ARCHIVE_FILE = $ARCHIVE_FILE"
