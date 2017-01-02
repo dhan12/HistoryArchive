@@ -46,7 +46,7 @@ log $(pwd) history_archive.bash heartbeat ...
 function PreCommand() {
   CURRENT_COMMAND=$BASH_COMMAND
   if [ -z ${START_DIR} ]; then
-    START_DIR=$(pwd)
+    START_DIR=$(printf %q pwd)
     START_TIME_STAMP=$(date +%Y%m%d%H%M%S)
     log "PreCommand set new starting dir $START_DIR"
   fi
