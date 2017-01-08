@@ -24,7 +24,6 @@ declare -i _VERBOSE=0
 # Change this variable to put more or less commands in a given file.
 NUM_OF_DAYS_PER_FILE__HA=7
 
-
 # Name of directory to put files.
 # Files will be put into $(HOME)/ARCHIVE_NAME__HA
 ARCHIVE_NAME__HA=Dropbox/history_archive/home/
@@ -99,17 +98,26 @@ function PostCommand() {
   unset CURRENT_COMMAND
 }
 
+function SetDayOfMonth() {
+  time_stamp=$(date +%Y%m%d%H%M%S)
+
+  DAY_OF_MONTH=$(date +"%d")
+  log "SetDayOfMonth original DAY_OF_MONTH=$DAY_OF_MONTH"
+
+  # Strip off leading zero
+  if [[ $DAY_OF_MONTH == 0* ]]; then 
+      DAY_OF_MONTH=$(echo $DAY_OF_MONTH | cut -c 2-)
+      log "SetDayOfMonth stripped 0: DAY_OF_MONTH=$DAY_OF_MONTH"
+  fi
+  log "SetDayOfMonth DAY_OF_MONTH=$DAY_OF_MONTH"
+}
 
 # Function to get current history file
 function SetCurrentFile() {
-
-  time_stamp=$(date +%Y%m%d%H%M%S)
-  dayOfMonth=$(date +"%d")
-  #printf -v dayOfMonth "%d" $(( 10#$raw_day )) # make sure number is base 10.
-  log "SetCurrentFile dayOfMonth=$dayOfMonth"
+  SetDayOfMonth
 
   # Get the day for the history file.
-  dayForHistoryFile="$(( ( ( (dayOfMonth-1) /NUM_OF_DAYS_PER_FILE__HA) * \
+  dayForHistoryFile="$(( ( ( (DAY_OF_MONTH-1) /NUM_OF_DAYS_PER_FILE__HA) * \
     NUM_OF_DAYS_PER_FILE__HA) + 1 ))"
   log "SetCurrentFile dayForHistoryFile=$dayForHistoryFile"
 
