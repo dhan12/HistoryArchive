@@ -55,17 +55,18 @@ trap "PreCommand" DEBUG
 # Function that will run after each command.
 function PostCommand() {
   log "in PostCommand"
+  set -f # stop globbing (expansion of '*')
 
   # Get last executed line from 'history'
   history_line=$(history | tail -1)
+  log "history_line '$history_line'"
   tokens=( $history_line )
-  tokenIndex=0
   cmd=""
-  for word in $history_line; do
-      if [ "$tokenIndex" -lt 2 ]; then
-          tokenIndex=$(( tokenIndex + 1 ))
+  for index in "${!tokens[@]}"; do
+      if [ "$index" -lt 2 ]; then
           continue
       fi
+      word="${tokens[index]}"
       cmd="$cmd $word"
   done
 
@@ -96,6 +97,7 @@ function PostCommand() {
   prev_history_line="$history_line"
   unset START_DIR
   unset CURRENT_COMMAND
+  set +f # restart globbing (expansion of '*')
 }
 
 function SetDayOfMonth() {
