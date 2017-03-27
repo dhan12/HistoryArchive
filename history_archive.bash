@@ -18,6 +18,7 @@ fi
 # Parameters
 
 # Print out debugging echo statements
+# Change to 1 to do verbose debug logging/printing
 declare -i _VERBOSE=0
 
 # Each file will contain commands that are grouped together by date/time.
@@ -45,7 +46,7 @@ log $(pwd) history_archive.bash heartbeat ...
 function PreCommand() {
   CURRENT_COMMAND=$BASH_COMMAND
   if [ -z ${START_DIR} ]; then
-    START_DIR=$(printf %q pwd)
+    START_DIR=$(pwd)
     START_TIME_STAMP=$(date +%Y%m%d%H%M%S)
     log "PreCommand set new starting dir $START_DIR"
   fi
