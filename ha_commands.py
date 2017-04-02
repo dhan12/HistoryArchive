@@ -26,6 +26,9 @@ def parseArgs():
     parser.add_argument('-a', '--all', action='store_true',
             help='Show output from all files (WARNING, this may be slow)',
             dest='getAll')
+    parser.add_argument('-f', '--full', action='store_true',
+            help='Show full details of a command, including directory)',
+            dest='fullDetails')
     return parser.parse_args()
 
 def main():
@@ -57,7 +60,10 @@ def main():
                         lastDate = thisDate
                         index = 0
                         prefix = get_next_prefix.getNextPrefix(prefix)
-                    print prefix + str(index) + '. ' + line[:-1]
+                    if args.fullDetails:
+                        print prefix + str(index) + '. ' + line[:-1]
+                    else:
+                        print prefix + str(index) + '. ' + ' '.join(line.split(' ')[2:-1])
                     index += 1
 
 if __name__ == '__main__':
