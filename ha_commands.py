@@ -1,8 +1,9 @@
-import os
-import sys
-import glob
-import subprocess
 import argparse
+import glob
+import os
+import subprocess
+import sys
+import get_next_prefix
 
 def getLatest(fileDir):
     return max(glob.iglob(fileDir+'/*.txt'), key=os.path.getctime)
@@ -12,6 +13,7 @@ def getFiles(fileDir, getAll):
         return sorted(list(glob.iglob(fileDir+'/*.txt')))
     else:
         return [getLatest(fileDir)]
+
 
 def parseArgs():
     parser = argparse.ArgumentParser(description='History Archive commands', prog="ha")
@@ -44,11 +46,19 @@ def main():
                 except:
                     pass
     else:
+        lastDate = ''
+        index = 0
+        prefix = get_next_prefix.getNextPrefix()
         for f in getFiles(args.historyArchiveDir, args.getAll):
-            if args.getAll:
-                subprocess.call(['cat',f])
-            else:
-                subprocess.call(['tail','-1000',f])
+            with open(f, 'r') as input:
+                for line in input:
+                    thisDate = line[:8]
+                    if thisDate != lastDate:
+                        lastDate = thisDate
+                        index = 0
+                        prefix = get_next_prefix.getNextPrefix(prefix)
+                    print prefix + str(index) + '. ' + line[:-1]
+                    index += 1
 
 if __name__ == '__main__':
     main()
