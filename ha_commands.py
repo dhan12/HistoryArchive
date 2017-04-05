@@ -63,7 +63,9 @@ def main():
                     if args.fullDetails:
                         print prefix + str(index) + '. ' + line[:-1]
                     else:
-                        print prefix + str(index) + '. ' + ' '.join(line.split(' ')[2:-1])
+                        # Print the id and the command.
+                        # This has a bug if the directory has a space.
+                        print prefix + str(index) + '. ' + ' '.join(line[:-1].split(' ')[2:])
                     index += 1
 
 if __name__ == '__main__':
