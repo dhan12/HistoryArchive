@@ -25,3 +25,14 @@ class TestGetNextPrefix(unittest.TestCase):
         # y gets turned to z
         prefix = get_next_prefix.getNextPrefix('faraway')
         self.assertEquals('farawaz', prefix)
+
+
+class TestGetPrefixFromDate(unittest.TestCase):
+    def test_jan_1(self):
+        prefix = get_next_prefix.getPrefixFromDate('20170101')
+        self.assertEquals('f1', prefix)
+
+    def test_dec_31(self):
+        prefix = get_next_prefix.getPrefixFromDate('20171231')
+        self.assertEquals('z31', prefix)
+

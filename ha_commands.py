@@ -51,7 +51,6 @@ def main():
     else:
         lastDate = ''
         index = 0
-        prefix = get_next_prefix.getNextPrefix()
         for f in getFiles(args.historyArchiveDir, args.getAll):
             with open(f, 'r') as input:
                 for line in input:
@@ -59,7 +58,7 @@ def main():
                     if thisDate != lastDate:
                         lastDate = thisDate
                         index = 0
-                        prefix = get_next_prefix.getNextPrefix(prefix)
+                        prefix = get_next_prefix.getPrefixFromDate(thisDate)
                     if args.fullDetails:
                         print prefix + str(index) + '. ' + line[:-1]
                     else:

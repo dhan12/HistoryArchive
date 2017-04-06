@@ -17,3 +17,17 @@ def getNextPrefix(aStr = ''):
         aStr = getNextPrefix(aStr[:-1]) + 'a'
 
     return aStr
+
+
+def getPrefixFromDate(yyyymmdd):
+    '''Get a alpha numeric code from the date string.
+
+    The code will be one letter to represent the month, 
+    followed by the day of the month.'''
+
+    # Use easy to read letters
+    month_letters = 'fghjkmnquvxz'
+
+    mon = int(yyyymmdd[4:6])
+    day = int(yyyymmdd[6:8])
+    return month_letters[mon-1] + str(day)
