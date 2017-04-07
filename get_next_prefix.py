@@ -29,5 +29,5 @@ def getPrefixFromDate(yyyymmdd):
     month_letters = 'fghjkmnquvxz'
 
     mon = int(yyyymmdd[4:6])
-    day = int(yyyymmdd[6:8])
-    return month_letters[mon-1] + str(day)
+    day = yyyymmdd[6:8]
+    return month_letters[mon-1] + day

@@ -30,9 +30,8 @@ class TestGetNextPrefix(unittest.TestCase):
 class TestGetPrefixFromDate(unittest.TestCase):
     def test_jan_1(self):
         prefix = get_next_prefix.getPrefixFromDate('20170101')
-        self.assertEquals('f1', prefix)
+        self.assertEquals('f01', prefix)
 
     def test_dec_31(self):
         prefix = get_next_prefix.getPrefixFromDate('20171231')
         self.assertEquals('z31', prefix)
-
